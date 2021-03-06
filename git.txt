@@ -1,0 +1,228 @@
+SCM : Software Configuration Management : 소프트웨어 형상 관리
+
+*********************
+GIT
+*********************
+1. 설치
+	- http://git-scm.com 에서 다운로드 후 설치
+
+2. 사용 방법
+	1) bash
+	2) gui - sourcetree
+
+3. 버전 관리 용어
+	(1) 알파 버전
+		특정 시점까지의 개발 결과를 개발자 내부에서 시험하기 위한 버전, 공식 배포
+
+	(2) 베타 버전
+		특정 시점까지의 개발 결과를 고객이 직접 체험해보고 평가하기 위한 버전, 공식 배포
+
+	(3) M(Milestone) : 1.0-M1, 1.0-M2, 1.0-M3
+		특정 시점까지의 개발 결과를 빌드한 버전. 고객에게 배포
+
+	(4) RC(Release Candidate) : 1.0-RC1, 1.0-RC2
+		정식 릴리즈 후보가 되는 빌드 버전. 고객에게 배포가 되기 때문에 고객이 직접 사용할 수 있으며 별 문제가 없으면 정식 릴리즈가 된다.
+	(5) GA(General Availability) : 1.0, 1.0.GA
+		정식 릴리즈 버전
+
+4. 버전 관리를 위한 전략(subversion 기준)
+	1) branch
+	2) tag
+	3) trunk
+
+5. 실습
+(1) GIT을 설치하고 가장 먼저 해야할 일
+	git config --global user.name "netsong7"
+	git config --global user.email netsong7@naver.com
+
+	git config --list
+	git config user.name
+
+(2) 프로젝트 생성
+	1) 특정 위치에 프로젝트 폴더 생성 : gitProject
+
+	2) local repository 만들기
+		해당 프로젝트로 이동
+		git init
+
+(3) 프로젝트 작업(로컬)
+	1) 워킹 디렉토리에 있는 항목들을 Stage에 올린다. : Staging
+		git add first.txt
+		git add first.txt, second.txt, third.txt
+		git add *.txt
+		git add --all  또는 git add .
+		git status
+		
+	2) Stage에 있는 파일들을 Local Repository에 저장 : Commit
+		git commit
+		git commit -m "간단한 메시지"
+
+	git log
+	git log --graph --oneline
+	git log --pretty=oneline
+		
+
+	3) 파일 삭제
+		삭제된 파일 조회
+		git ls-files -d  또는 git ls-files --delete
+
+		git restore first.txt
+		git checkout second.txt
+
+		모든 파일 복원
+		git restore .
+
+	4) 수정한 내용 비교하기
+		first.txt 수정하기
+		git diff : stage에 올라가기 전에 내용 비교
+		git diff --staged : stage에 올라간 후에도 내용 비교 가능
+
+	5) commit한 내용 수정
+		메시지만 수정
+		git commit --amend -m "새로운 메시지"
+
+		파일 추가(메시지 수정없이)
+		git commit --amend --no-edit
+
+	6) Staging Area 생략하기
+		first.txt 수정
+
+		git add first.txt
+		git commit -m "메시지"
+
+		git commit -a -m "메시지"
+
+	7) 파일 이름 변경하기
+		git mv second.txt sec.txt
+
+(4) 프로젝트 작업(Remote)
+	1) 서버 준비
+		- github, gitlab, bitbucket, codebase, cloudforge, ...
+	
+	2) 명령어
+		git remote
+		git remote -v
+
+		git remote add first https://github.com/muyongseja/gitProject.git
+
+		업로드
+		git push <업로드할 서버 주소> <올릴 데이터가 있는 저장소 이름(로컬측)>
+		git push  first master
+
+		다운로드(pull, fetch)
+		git pull <다운로드받을 서버 주소> <받을 데이터가 있는 저장소 이름(서버측)>
+		git pull first master
+			
+		git fetch first master
+		git merge first
+
+		서버에 있는 내용에 그대로 내 컴퓨터에 복제
+		git clone <서버 주소>
+
+(5) 태그
+	1) 일반 태그(Lightweight Tag)
+		- 이름만 붙일 수 있다.
+
+	2) 주석 태그(Annotated Tag) 
+		- 이름
+		- 태그에 대한 설명
+		- 서명
+		- 이 태그를 만든 사람의 이름, 이메일, 만든 날짜등을 포함
+
+
+	3) 태그 작성
+		- Lightweight Tag
+			git tag <태그명>
+			----------------------
+			git tag v1.0
+
+			git tag
+			git log --decorate
+
+			git show v1.0
+
+		- Annotated Tag
+			git tag -a <태그명>
+			-----------------------
+			git tag -a v2.0
+			git tag -am "메시지" v2.0
+
+			git tag -n
+
+(6) Branch
+	git branch testing
+	git branch
+
+	git checkout testing
+
+	git branch -d testing
+
+	---------------------------------
+	git branch iss53
+	git checkout iss53
+	또는
+	git checkout -b iss53
+
+	touch iss53-1.txt
+	git add iss53-1.txt
+	git commit -m "iss53-1 작업 진행"
+
+	git checkout master
+
+	git checkout -b hotfix
+
+	touch hotfix
+	git add .
+	git commit -m "버그 수정"
+
+	git checkout master  
+
+	git merge hotfix
+
+	git branch -d hotfix
+
+	git checkout iss53
+
+	touch iss53-2
+	git add .
+	git commit -m "iss53-2 작업 진행"
+
+	git checkout master
+	
+	git merge iss53
+
+	git push origin iss53
+
+	git branch -d iss53
+
+	서버에서 iss53 브랜치에 임의의 파일을 추가(다른 사람이 올린 브랜치라고 가정)
+
+	git pull origin iss53
+
+	Remote에 있는 브랜치 삭제
+	git push <서버주소> --delete <브랜치명>
+	------------------------------------------------
+	git push origin --delete iss53
+
+
+(7) 협업
+	1) collaboration
+		- settings > manage access
+		
+		1) 팀장은 먼저 master 기본 소스를 만들어 놓는다.
+		2) 팀원들은 master를 다운로드 받은 후 따로 branch를 만들어 작업을 한다.
+		3) 팀원들은 작업이 끝난 후 서버로 업로드한다.
+		4) 팀장은 팀원들이 업로드한 branch를 master로 merge한다.
+		5) merge한 branch는 삭제한다.
+		
+
+	2) fork
+
+
+
+
+
+
+
+
+
